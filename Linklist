@@ -1,0 +1,82 @@
+package main
+
+import "fmt"
+
+type node struct {
+	data    int
+	pointer *node
+}
+
+type linkList struct {
+	headpointer *node
+	length      int
+}
+
+func (l *linkList) prepend(n *node) {
+	second := l.headpointer
+	l.headpointer = n
+	l.headpointer.pointer = second
+	l.length++
+}
+
+func (l *linkList) printListData() {
+	toPrint := l.headpointer
+	for l.length != 0 {
+		fmt.Printf("%d->", toPrint.data)
+		toPrint = toPrint.pointer
+		l.length--
+	}
+	fmt.Printf("\n")
+}
+
+func (l *linkList) printNodeData() {
+	l.length = 0
+	toPrint := l.headpointer
+	for l.length != 0 {
+		fmt.Printf("%d<-", toPrint.data)
+		toPrint = toPrint.pointer
+		l.length++
+	}
+	fmt.Printf("\n")
+}
+
+func (l *linkList) deleteWithValue(value int) {
+	if l.length == 0 {
+		return
+	}
+	if l.headpointer.data == value {
+		l.headpointer = l.headpointer.pointer
+		l.length--
+		return
+	}
+	previousToDelete := l.headpointer
+	for previousToDelete.pointer.data != value {
+		if previousToDelete.pointer.pointer == nil {
+			return
+		}
+		previousToDelete = previousToDelete.pointer
+	}
+	previousToDelete.pointer = previousToDelete.pointer.pointer
+	l.length--
+}
+
+func main() {
+	fmt.Print("\nSelamat datang di program linklist!\n")
+
+	myList := linkList{}
+	node1 := &node{data: 45}
+	node2 := &node{data: 32}
+	node3 := &node{data: 18}
+	myList.prepend(node1)
+	myList.prepend(node2)
+	myList.prepend(node3)
+	myList.printListData()
+	myList.deleteWithValue(18)
+	myList.printListData()
+	myList.deleteWithValue(100)
+	myList.deleteWithValue(19)
+	// delete from empty list
+
+	fmt.Print(myList.headpointer.data)
+	fmt.Print(node1.data, node2.data, node3.data)
+}
